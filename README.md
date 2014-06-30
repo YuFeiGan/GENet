@@ -1,4 +1,4 @@
-MFANet
+GENet
 ======
 
-The deep Learning network based on Marginal Fisher Analysis
+The deep Learning network based on Graph Embedding
