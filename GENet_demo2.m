@@ -7,39 +7,84 @@ clear all
 % load dataORL.mat
 addpath('Liblinear')
 addpath('Utils')
-cd 'orl_faces'
-getORLdata(5)
-load dataORL
+% cd 'orl_faces'
+% getORLdata(5)
 
-% load myPIE
+
+% load PIE_32x32.mat
+% temp = [fea,gnd];
+% temp = double(temp(randperm(size(temp,1)),:));
+% test = [];
+% for i=1:68
+%     for j=1:10
+%         ind = find(temp(:,end)==i,1);
+%         test = [test;temp(ind,:)];
+%         temp(ind,:) = [];
+%     end
+% end
+% 
+% train_data = temp(:,1:end-1);
+% train_label = temp(:,end);
+% 
+% test_data = test(:,1:end-1);
+% test_label = test(:,end);
+% 
+% save myPIE train_data train_label test_data test_label
+
+
+load ORL_32x32.mat
+temp = [fea,gnd];
+temp = double(temp(randperm(size(temp,1)),:));
+test = [];
+for i=1:40
+    for j=1:3
+        ind = find(temp(:,end)==i,1);
+        test = [test;temp(ind,:)];
+        temp(ind,:) = [];
+    end
+end
+
+train_data = temp(:,1:end-1);
+train_label = temp(:,end);
+
+test_data = test(:,1:end-1);
+test_label = test(:,end);
+
+save myORL train_data train_label test_data test_label
+
+
+
+
+% cd 'Extended Yale B/YaleB'
+% getYaledata(60)
 % load dataYaleB
 %% ================== setting GENet ==========================
-% load dataORL
+
+% load myPIE
 
 GENet.layer{1}.type = 'PCA';
+% GENet.layer{1}.Fisherface = 0;
+% GENet.layer{1}.type = 'MFA';
+% GENet.layer{1}.intraK = 2;  %越大越紧
+% GENet.layer{1}.interK = 5000;  %越大越高
 GENet.layer{1}.ReducedDim = 100;
-
+% GENet.layer{1}.Regu = 1;
 
 GENet.layer{2}.type = 'MFA';
-GENet.layer{2}.intraK = 2;  %越大越紧
+GENet.layer{2}.intraK = 5;  %越大越紧
 GENet.layer{2}.interK = 500;  %越大越高
-GENet.layer{2}.ReducedDim = 70;
+GENet.layer{2}.ReducedDim = 51;
 GENet.layer{2}.Regu = 1;
 
-% GENet.layer{2}.type = 'MFA';
-% GENet.layer{2}.intraK = 5;  %越大越紧
-% GENet.layer{2}.interK = 500;  %越大越高
-% GENet.layer{2}.ReducedDim = 71;
-% GENet.layer{2}.Regu = 1;
-
 GENet.layer{3}.type = 'PCA';
-GENet.layer{3}.ReducedDim = 60;
-
-GENet.layer{3}.type = 'MFA';
-GENet.layer{3}.intraK = 10;  %越大越紧
-GENet.layer{3}.interK = 500;  %越大越高
 GENet.layer{3}.ReducedDim = 40;
-GENet.layer{3}.Regu = 1;
+% GENet.layer{3}.Fisherface = 0;
+% 
+GENet.layer{4}.type = 'MFA';
+GENet.layer{4}.intraK = 100;  %越大越紧
+GENet.layer{4}.interK = 500;  %越大越高
+GENet.layer{4}.ReducedDim = 40;
+GENet.layer{4}.Regu = 1;
 
 %% ================== train GENet ==========================
 fprintf('\n ====== Computing the eigvalue ======= \n')
